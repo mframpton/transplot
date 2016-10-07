@@ -4,7 +4,7 @@ import sys
 import os
 
 
-input_dir = os.getcwd() + "\\..\\data"
+input_dir = os.getcwd()
 
 help(ngstp)
 
