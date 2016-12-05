@@ -6,13 +6,14 @@ import os
 
 input_dir = os.getcwd()
 
-help(ngstp)
+#help(ngstp)
 
-ngstp.make_protein_domain_color_file(os.path.join(input_dir, "APC_exoplot_domains_wt_overlaps.txt"),
-                                     ["ENST00000457016"],
-                                     "Pfam", 
-                                     ["Start"],
-                                     os.path.join(input_dir,"protein_domain_color.csv"))
+ngstp.make_protein_domain_color_file(
+        protein_domain_file=os.path.join(input_dir, "APC_exoplot_domains_wt_overlaps.txt"),
+        transcript_l= ["ENST00000457016"],
+        database="Pfam", 
+        sortby_col_l=["Start"],
+        out_path=os.path.join(input_dir,"protein_domain_color.csv"))
 
 ngstp.make_exon_coord_file(os.path.join(input_dir , "APC_ENST00000457016_small.csv"),
                            "ENST00000457016",
