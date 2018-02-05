@@ -32,10 +32,10 @@ def get_cov_df(cov_file, transcript, bp_start, bp_end, sample_l):
         contains the coverage data.
     '''    
 
-    print "Reading in coverage data for " + str(len(sample_l)) + " samples..."
+    print("Reading in coverage data for " + str(len(sample_l)) + " samples...")
     if bp_start != None and bp_end != None:
         if bp_start >= bp_end:
-            print "WARNING: bp_start " + str(bp_start) + " is not less than " + str(bp_end) + "." 
+            print("WARNING: bp_start " + str(bp_start) + " is not less than " + str(bp_end) + ".") 
     
     cov_df_chunker = pd.read_csv(cov_file, chunksize=1000)
     col_to_keep_l = ["chromStart","strand","position","cov","exon"]
@@ -122,7 +122,7 @@ def make_track(track, cov_df, bound_l, color_l, edge_color_l, setting_dict):
     setting_dict: dictionary
         settings for making the png.'''
     
-    for i in xrange(1,len(bound_l)):
+    for i in range(1,len(bound_l)):
         cov_in_bounds_df =  cov_df[(cov_df["tp"] >= bound_l[i-1]) & (cov_df["tp"] < bound_l[i])]
         #print cov_in_bounds_df
         track.fill_between(cov_in_bounds_df["tp"].tolist(), cov_in_bounds_df["cov"], facecolor=color_l[i-1], edgecolor=edge_color_l[i-1])

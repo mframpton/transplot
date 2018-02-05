@@ -39,7 +39,7 @@ def get_protein_domain_df(protein_domain_file, transcript_l, database, sortby_co
         protein_domain_df_chunk = protein_domain_df_chunk[(protein_domain_df_chunk["TranscriptID"].isin(transcript_l)) & (protein_domain_df_chunk["Domain_type"]==database)]
         protein_domain_df = pd.concat([protein_domain_df, protein_domain_df_chunk], ignore_index=True)
     
-    protein_domain_df.sort(sortby_col_l, inplace=True)
+    protein_domain_df.sort_values(by=sortby_col_l, inplace=True)
 
     return protein_domain_df
 
@@ -63,7 +63,7 @@ def get_protein_domain_color_s(protein_domain_df):
     protein_domain_l = pd.unique(protein_domain_df["DomainID"])
     #random.shuffle(protein_domain_l)
     cmap = mpl.cm.get_cmap(name="Set1", lut=len(protein_domain_l))
-    cmap_tmp_l = [cmap(i) for i in xrange(len(protein_domain_l))] 
+    cmap_tmp_l = [cmap(i) for i in range(len(protein_domain_l))] 
     cmap_l = []
     for c in cmap_tmp_l:
         if isinstance(c, str):
@@ -162,7 +162,7 @@ def get_bound_color_ls_for_cb(protein_domain_df, utr_df, protein_domain_color_s,
     '''Get the bounds without the utrs.'''
     protein_domain_start_tp_l = protein_domain_df["start_tp"].tolist()
     protein_domain_end_tp_l = protein_domain_df["end_tp"].tolist()
-    pd_bound_l = [[protein_domain_start_tp_l[i], protein_domain_end_tp_l[i]] for i in xrange(len(protein_domain_start_tp_l))]
+    pd_bound_l = [[protein_domain_start_tp_l[i], protein_domain_end_tp_l[i]] for i in range(len(protein_domain_start_tp_l))]
     pd_bound_l = [bound for bound_l in pd_bound_l for bound in bound_l]
     
     '''Add the utrs to the protein domains.'''
@@ -176,17 +176,17 @@ def get_bound_color_ls_for_cb(protein_domain_df, utr_df, protein_domain_color_s,
     domain_l = bound_color_df["DomainID"].tolist()
     start_bound_l = bound_color_df["start_tp"].tolist()
     end_bound_l = bound_color_df["end_tp"].tolist()
-    pd_utr_bound_ll = [[start_bound_l[i], end_bound_l[i]] for i in xrange(len(start_bound_l))]
+    pd_utr_bound_ll = [[start_bound_l[i], end_bound_l[i]] for i in range(len(start_bound_l))]
     whole_trans_bound_ll = get_whole_trans_bound_ll(pd_utr_bound_ll)
     whole_trans_domain_ll = get_whole_trans_domain_ll(whole_trans_bound_ll, pd_utr_bound_ll, domain_l)
     #print whole_trans_domain_ll
     #Add the none regions.
-    whole_trans_domain_ll = [["none"] if len(whole_trans_domain_ll[i]) == 0 else whole_trans_domain_ll[i] for i in xrange(len(whole_trans_domain_ll))]
+    whole_trans_domain_ll = [["none"] if len(whole_trans_domain_ll[i]) == 0 else whole_trans_domain_ll[i] for i in range(len(whole_trans_domain_ll))]
     #print whole_trans_domain_ll
         
     '''Add bounds for stripes in the regions containing > 1 protein domain.'''
     whole_trans_stripe_bound_l, whole_trans_stripe_color_l = [],[]
-    for i in xrange(len(whole_trans_bound_ll)):
+    for i in range(len(whole_trans_bound_ll)):
         if len(whole_trans_domain_ll[i]) == 1:
             whole_trans_stripe_bound_l.append(whole_trans_bound_ll[i][0])
             whole_trans_stripe_color_l.append(protein_domain_color_s.ix[whole_trans_domain_ll[i][0]])
@@ -232,7 +232,7 @@ def get_whole_trans_bound_ll(pd_utr_bound_ll):
     #print se_l
     
     whole_trans_bound_ll = []
-    for i in xrange(len(bound_l)-1):
+    for i in range(len(bound_l)-1):
         bound = []
         if se_l[i] == "s":
             bound.append(bound_l[i])
@@ -274,9 +274,9 @@ def get_whole_trans_domain_ll(whole_trans_bound_ll, pd_utr_bound_ll, domain_l):
     whole_trans_domain_ll = []
     for i in range(len(whole_trans_bound_ll)):
         overlap_domain_l = []
-        new_set = set(xrange(whole_trans_bound_ll[i][0],whole_trans_bound_ll[i][1]+1))
+        new_set = set(range(whole_trans_bound_ll[i][0],whole_trans_bound_ll[i][1]+1))
         for j in range(len(pd_utr_bound_ll)):
-            old_set = set(xrange(pd_utr_bound_ll[j][0],pd_utr_bound_ll[j][1]+1))
+            old_set = set(range(pd_utr_bound_ll[j][0],pd_utr_bound_ll[j][1]+1))
             if len(new_set.intersection(old_set)) > 0:
                 overlap_domain_l.append(domain_l[j])
         whole_trans_domain_ll.append(overlap_domain_l)
@@ -320,10 +320,10 @@ def generate_stripe_ls(whole_trans_bound_ll, whole_trans_domain_ll, i, stripe_mi
     first_domain = None if i == 0 else get_domain_removed(whole_trans_domain_ll[i], whole_trans_domain_ll[i-1])
     last_domain = None if i >= len(whole_trans_domain_ll) - 1 else get_domain_removed(whole_trans_domain_ll[i], whole_trans_domain_ll[i+1])
     other_domain_l = [domain for domain in whole_trans_domain_ll[i] if domain not in [first_domain, last_domain]]
-    domain_l = filter(lambda x: x != None, pd.unique([first_domain] + other_domain_l + [last_domain])) 
+    domain_l = list(filter(lambda x: x != None, pd.unique([first_domain] + other_domain_l + [last_domain]))) 
     
     '''Work out the number of intervals.'''
-    num_intervals = len(filter(lambda x: x != None, [first_domain] + other_domain_l + [last_domain]))
+    num_intervals = len(list(filter(lambda x: x != None, [first_domain] + other_domain_l + [last_domain])))
     interval_inc = num_intervals - 1 if first_domain == last_domain and first_domain != None else num_intervals
     region_len = whole_trans_bound_ll[i][1] - whole_trans_bound_ll[i][0]
     while float(region_len)/num_intervals >= stripe_min_bases:
@@ -331,7 +331,7 @@ def generate_stripe_ls(whole_trans_bound_ll, whole_trans_domain_ll, i, stripe_mi
     
     '''Generate the stripe bounds and corresponding domains.'''
     stripe_bound_l = list(np.linspace(whole_trans_bound_ll[i][0], whole_trans_bound_ll[i][1], num_intervals+1))
-    stripe_domain_l = [domain_l[k % len(domain_l)] for k in xrange(len(stripe_bound_l)-1)] 
+    stripe_domain_l = [domain_l[k % len(domain_l)] for k in range(len(stripe_bound_l)-1)] 
     
     return [stripe_bound_l, stripe_domain_l]
 
@@ -393,7 +393,7 @@ def get_legend_num_cols(protein_domain_description_l, max_num_chars_per_row):
     while num_cols >= 1:
         zero_rows_too_long = True
         num_chars_in_row = 0
-        for i in xrange(len(protein_domain_description_l)):
+        for i in range(len(protein_domain_description_l)):
             num_chars_in_row += patch_len + min_patch_text_gap + len(protein_domain_description_l[i]) + min_text_patch_gap
             if num_chars_in_row > max_num_chars_per_row:
                 zero_rows_too_long = False 
@@ -431,7 +431,7 @@ def set_colorbar_ticks(track, bound_l, transcript_len, top_or_bottom, markersize
         the axis with ticks added.
     '''
     
-    for i in xrange(len(bound_l)):
+    for i in range(len(bound_l)):
         bound_l[i] = float(bound_l[i]-1)/float(transcript_len-1) #This assumes the xlim is (1, transcript_length).
     
     plt.setp(track.xaxis.get_ticklines(),'markersize', markersize)

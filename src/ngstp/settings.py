@@ -93,5 +93,5 @@ def display_setting_dict(setting_dict):
     
     setting_dict_key_l = sorted(list(setting_dict.keys()))
     for key in setting_dict_key_l:
-        print key + ": " + str(setting_dict[key])
-    print "\n"
+        print(key + ": " + str(setting_dict[key]))
+    print("\n")

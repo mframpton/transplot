@@ -1,7 +1,8 @@
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import pandas as pd
-import re
+#import re
+import regex as re
 import sys
 
 '''
@@ -115,7 +116,7 @@ def annotate_track_with_variants(variant_track, variant_df, transcript_len, sett
     variant_df["arrow_bin"] = [0]*len(variant_df.index)
     arrow_bin = 1
     variant_df.set_value(0,"arrow_bin",arrow_bin)
-    for i in xrange(1,len(variant_df.index)):
+    for i in range(1,len(variant_df.index)):
         if variant_df.iloc[i]["merge_wt_prev"] == False or variant_df.iloc[i]["top"] != variant_df.iloc[i-1]["top"]:
             arrow_bin += 1
         variant_df.set_value(i,"arrow_bin",arrow_bin)
@@ -159,7 +160,7 @@ def get_arrow_height_s(top_s, setting_dict):
     top_l = top_s.tolist()
     height_l = []
     t_bin,b_bin = 0,0
-    for i in xrange(len(top_l)):
+    for i in range(len(top_l)):
         if top_l[i] == 0:
             height_l.append(t_bin % setting_dict["v_track_num_arrow_heights"])
             t_bin += 1
@@ -220,8 +221,10 @@ def make_variant_annotations_key(variant_key, variant_df, setting_dict):
     plt.rc('text',usetex=True)
     variant_key.set_axis_off()
     variant_key_txt = r'''\begin{tabular}{''' + 'l'*setting_dict["v_key_num_cols"] + '''} \\\\ ''' 
+    #variant_df["var_type_abbrev"] = variant_df.apply(lambda x: setting_dict["v_track_var_abbrevs"][x["effect"]] 
+    #                                                 if setting_dict["v_track_var_abbrevs"].has_key(x["effect"]) != -1 else "", axis=1) #Abbreviate a variant type.
     variant_df["var_type_abbrev"] = variant_df.apply(lambda x: setting_dict["v_track_var_abbrevs"][x["effect"]] 
-                                                     if setting_dict["v_track_var_abbrevs"].has_key(x["effect"]) != -1 else "", axis=1) #Abbreviate a variant type.
+                                                     if "v_track_var_abbrevs" in setting_dict.keys() else "", axis=1) #Abbreviate a variant type.
     variant_df["variant_txt_str"] = variant_df["id"] + ": " + variant_df["dnachange"] + ", " + variant_df["prot_change"] + ", (" + variant_df["var_type_abbrev"] + ")"
     variant_df["variant_txt_str"] = variant_df["variant_txt_str"].map(mark_up_special_chars)    
     add_multicol = lambda cell_txt: "\multicolumn{2}{l}{" + cell_txt + "}" if len(cell_txt) > setting_dict["v_key_max_chars_per_col"] else cell_txt
