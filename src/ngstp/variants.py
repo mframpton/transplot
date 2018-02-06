@@ -1,7 +1,6 @@
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import pandas as pd
-#import re
 import regex as re
 import sys
 
@@ -115,11 +114,11 @@ def annotate_track_with_variants(variant_track, variant_df, transcript_len, sett
     variant_df["merge_wt_prev"] = variant_df["num_pixels_diff"] <= setting_dict["v_track_merge_pixel_thresh"]
     variant_df["arrow_bin"] = [0]*len(variant_df.index)
     arrow_bin = 1
-    variant_df.set_value(0,"arrow_bin",arrow_bin)
+    variant_df.at[0,"arrow_bin"] = arrow_bin
     for i in range(1,len(variant_df.index)):
         if variant_df.iloc[i]["merge_wt_prev"] == False or variant_df.iloc[i]["top"] != variant_df.iloc[i-1]["top"]:
             arrow_bin += 1
-        variant_df.set_value(i,"arrow_bin",arrow_bin)
+        variant_df.at[i,"arrow_bin"] = arrow_bin
     
     '''Create new dataframe where each row corresponds to 1 arrow.''' 
     x_pos_s = variant_df.groupby("arrow_bin")["trans_pos_pc"].mean()

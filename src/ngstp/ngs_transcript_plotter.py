@@ -28,7 +28,7 @@ def make_protein_domain_color_file(protein_domain_file, transcript_l, database, 
     protein_domain_df = pds.get_protein_domain_df(protein_domain_file, transcript_l, database, sortby_col_l)
     protein_domain_color_s = pds.get_protein_domain_color_s(protein_domain_df)
     protein_domain_color_s.to_csv(out_path)
-    print("Written protein domain color file to " + out_path + "\n")
+    print("Written protein domain color file to {0}\n".format(out_path))
     
 
 def make_exon_coord_file(cov_file, transcript, out_path):
@@ -47,7 +47,7 @@ def make_exon_coord_file(cov_file, transcript, out_path):
     cov_df = c.get_cov_df(cov_file, transcript, None, None, [])
     exon_coord_df = c.get_exon_coord_df(cov_df)
     exon_coord_df.to_csv(out_path, index=True)
-    print("Written exon coordinate file to " + out_path + "\n")
+    print("Written exon coordinate file to {0}\n".format(out_path))
     
 
 def make_png(transcript_l, title_l, track_l, sample_ll, utr_file_l, exon_coord_file_l, cov_file_l,
@@ -106,7 +106,7 @@ def make_png(transcript_l, title_l, track_l, sample_ll, utr_file_l, exon_coord_f
             num_rows += setting_dict["pd_track_rows"] + track_gap_dict[previous_track]
             previous_track = "pd"
     if num_rows > setting_dict["fig_num_rows"]:
-        print("ERROR: PNG figure requires " + str(num_rows) + " rows but there are only " + str(setting_dict["fig_num_rows"]) + ".\n")
+        print("ERROR: PNG figure requires {0} rows but there are only {1}\n".format(num_rows,setting_dict["fig_num_rows"]))
         return False
 
     '''Initialise the figure.'''
@@ -121,7 +121,7 @@ def make_png(transcript_l, title_l, track_l, sample_ll, utr_file_l, exon_coord_f
 
     for i in range(len(transcript_l)):
         
-        print("Transcript: " + transcript_l[i])
+        print("Transcript: {0}".format(transcript_l[i]))
         
         '''Read in the exon positions and the utrs.'''
         exon_coord_df = pd.read_csv(exon_coord_file_l[i], index_col="exon")
@@ -195,10 +195,8 @@ def make_png(transcript_l, title_l, track_l, sample_ll, utr_file_l, exon_coord_f
             start_row += setting_dict["pd_track_gap_rows"]
 
     fig.set_size_inches(setting_dict["fig_width_inches"], setting_dict["fig_height_inches"])
-    print(png_file)
-    print(setting_dict["fig_dpi"])
     plt.savefig(png_file, dpi=setting_dict["fig_dpi"])
-    print("Written " + png_file + ".\n") 
+    print("Written {0}.\n".format(png_file)) 
 
 
 def get_exon_bound_color_l(exon_coord_df, utr_df, strand):

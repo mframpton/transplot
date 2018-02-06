@@ -32,10 +32,10 @@ def get_cov_df(cov_file, transcript, bp_start, bp_end, sample_l):
         contains the coverage data.
     '''    
 
-    print("Reading in coverage data for " + str(len(sample_l)) + " samples...")
+    print("Reading in coverage data for {0} samples...".format(len(sample_l)))
     if bp_start != None and bp_end != None:
         if bp_start >= bp_end:
-            print("WARNING: bp_start " + str(bp_start) + " is not less than " + str(bp_end) + ".") 
+            print("WARNING: bp_start {0} is not less than {1}".format(bp_start,bp_end)) 
     
     cov_df_chunker = pd.read_csv(cov_file, chunksize=1000)
     col_to_keep_l = ["chromStart","strand","position","cov","exon"]

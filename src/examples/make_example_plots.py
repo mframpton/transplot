@@ -4,113 +4,59 @@ import sys
 import os
 
 
+'''Make the input/output dir paths.'''
 input_dir = os.path.abspath(os.path.join(os.getcwd(),"..","..","data","examples","input"))
-#print(input_dir)
 output_dir = os.path.abspath(os.path.join(os.getcwd(),"..","..","data","examples","plots"))
 
-help(ngstp)
-#sys.exit()
+'''Set other paths/variables.'''
+apc_utrs_txt = os.path.join(input_dir,"APC_utrs.txt")
+apc_canon_trans = "ENST00000457016"
+apc_coverage_csv = os.path.join(input_dir,"APC_{0}_small.csv".format(apc_canon_trans))
+apc_coverage_reverse_csv = os.path.join(input_dir,"APC_{0}_small_reverse.csv".format(apc_canon_trans))
+apc_variants_cases_txt = os.path.join(input_dir,"APC_variants_CASES.txt")
+protein_domain_txt = os.path.join(input_dir,"APC_exoplot_domains_wt_overlaps.txt")
 
+'''Print out help message for ngs_transcript_plotter module.'''
+help(ngstp)
+
+'''Make a protein domain color file.'''
+protein_domain_color_csv = os.path.join(input_dir,"protein_domain_color.csv")
 ngstp.make_protein_domain_color_file(
         protein_domain_file=os.path.join(input_dir, "APC_exoplot_domains_wt_overlaps.txt"),
-        transcript_l= ["ENST00000457016"],
+        transcript_l= [apc_canon_trans],
         database="Pfam", 
         sortby_col_l=["Start"],
-        out_path=os.path.join(input_dir,"protein_domain_color.csv"))
+        out_path=protein_domain_color_csv)
 
-ngstp.make_exon_coord_file(os.path.join(input_dir , "APC_ENST00000457016_small.csv"),
-                           "ENST00000457016",
-                           os.path.join(input_dir , "APC_exon_coord.csv"))
+'''Make exon coordinates files.'''
+exon_coord_csv,exon_coord_reverse_csv = os.path.join(input_dir , "APC_exon_coord.csv"),os.path.join(input_dir , "APC_exon_coord_reverse.csv")
+ngstp.make_exon_coord_file(apc_coverage_csv,apc_canon_trans,exon_coord_csv)
+ngstp.make_exon_coord_file(apc_coverage_reverse_csv,apc_canon_trans,exon_coord_reverse_csv)
 
-ngstp.make_exon_coord_file(os.path.join(input_dir , "APC_ENST00000457016_small_reverse.csv"),
-                           "ENST00000457016",
-                           os.path.join(input_dir , "APC_exon_coord_reverse.csv"))
-
+'''Display the settings.'''
 setting_dict = s.get_setting_dict()
 s.display_setting_dict(setting_dict)
 
-ngstp.make_png(["ENST00000457016"],
-               [r'\textbf{\textit{APC}}'],
-               ["111"],
-               [["543_A10"]],
-               [os.path.join(input_dir, "APC_utrs.txt")],
-               [os.path.join(input_dir, "APC_exon_coord.csv")],
-               [os.path.join(input_dir, "APC_ENST00000457016_small.csv")],
-               [os.path.join(input_dir, "APC_variants_CASES.txt")],
-               [os.path.join(input_dir, "APC_exoplot_domains_wt_overlaps.txt")],
-               os.path.join(input_dir, "protein_domain_color.csv"),
-               setting_dict,
-               os.path.join(output_dir , "APC_cases_make_png_1.png"))
-#sys.exit()
+'''Make example plots - same data but with difference combinations of the 3 tracks.'''
+track_ll = [["111"],["110"],["101"],["011"],["010"],["001"]]
+plot_path_l = [os.path.join(output_dir,"APC_cases_make_png_{0}.png".format(i+1)) for i in range(len(track_ll))]
+for i in range(len(track_ll)):
+    ngstp.make_png([apc_canon_trans],
+                   [r'\textbf{\textit{APC}}'],
+                   track_ll[i],
+                   [["543_A10"]],
+                   [apc_utrs_txt],
+                   [exon_coord_csv],
+                   [apc_coverage_csv],
+                   [apc_variants_cases_txt],
+                   [protein_domain_txt],
+                   protein_domain_color_csv,
+                   setting_dict,
+                   plot_path_l[i])
+
 
 '''
-ngstp.make_png(["ENST00000457016"],
-               [r'\textbf{\textit{APC}}'],
-               ["110"],
-               [["543_A10"]],
-               os.path.join(input_dir , "APC_utrs_manual_reverse.txt"),
-               os.path.join(input_dir , "APC_exon_coord_reverse.csv"),
-               os.path.join(input_dir , "APC_ENST00000457016_small_reverse.csv"),
-               os.path.join(input_dir , "APC_variants_CASES_reverse.txt"),
-               os.path.join(input_dir , "APC_exoplot_domains_wt_overlaps.txt"),
-               os.path.join(input_dir , "protein_domain_color.csv"),
-               setting_dict,
-               os.path.join(input_dir , "APC_cases.make_png.2.png"))
-
-ngstp.make_png(["ENST00000457016"],
-               [r'\textbf{\textit{APC}}'],
-               ["101"],
-               [["543_A10"]],
-               os.path.join(input_dir , "APC_utrs_manual_reverse.txt"),
-               os.path.join(input_dir , "APC_exon_coord_reverse.csv"),
-               os.path.join(input_dir , "APC_ENST00000457016_small_reverse.csv"),
-               os.path.join(input_dir , "APC_variants_CASES_reverse.txt"),
-               os.path.join(input_dir , "APC_exoplot_domains_wt_overlaps.txt"),
-               os.path(input_dir , "protein_domain_color.csv"),
-               setting_dict,
-               input_dir + "\\APC_cases.make_png.3.png")
-
-ngstp.make_png(["ENST00000457016"],
-               [r'\textbf{\textit{APC}}'],
-               ["011"],
-               [["543_A10"]],
-               os.path.join(input_dir , "APC_utrs_manual_reverse.txt"),
-               os.path.join(input_dir , "APC_exon_coord_reverse.csv"),
-               os.path.join(input_dir , "APC_ENST00000457016_small_reverse.csv"),
-               os.path.join(input_dir , "APC_variants_CASES_reverse.txt"),
-               os.path.join(input_dir , "APC_exoplot_domains_wt_overlaps.txt"),
-               os.path.join(input_dir , "protein_domain_color.csv"),
-               setting_dict,
-               os.path.join(input_dir , "APC_cases.make_png.4.png"))
-
-ngstp.make_png(["ENST00000457016"],
-               [r'\textbf{\textit{APC}}'],
-               ["010"],
-               [["543_A10"]],
-               os.path.join(input_dir , "APC_utrs_manual_reverse.txt"),
-               os.path.join(input_dir , "APC_exon_coord_reverse.csv"),
-               os.path.join(input_dir , "APC_ENST00000457016_small_reverse.csv"),
-               os.path.join(input_dir , "APC_variants_CASES_reverse.txt"),
-               os.path.join(input_dir , "APC_exoplot_domains_wt_overlaps.txt"),
-               os.path.join(input_dir , "protein_domain_color.csv"),
-               setting_dict,
-               os.path.join(input_dir , "APC_cases.make_png.5.png"))
-
-ngstp.make_png(["ENST00000457016"],
-               [r'\textbf{\textit{APC}}'],
-               ["001"],
-               [["543_A10"]],
-               os.path.join(input_dir + "\\APC_utrs_manual_reverse.txt"),
-               os.path.join(input_dir + "\\APC_exon_coord_reverse.csv"),
-               os.path.join(input_dir + "\\APC_ENST00000457016_small_reverse.csv"),
-               os.path.join(input_dir + "\\APC_variants_CASES_reverse.txt"),
-               os.path.join(input_dir + "\\APC_exoplot_domains_wt_overlaps.txt"),
-               os.path.join( + "\\protein_domain_color.csv"),
-               setting_dict,
-               os.path.join( + "\\APC_cases.make_png.6.png"))
-
-
-#ngstp.make_png(["ENST00000457016","ENST00000457016","ENST00000457016"],
+#ngstp.make_png([apc_canon_trans,apc_canon_trans,apc_canon_trans],
 #               [r'\textbf{\textit{APC1}}',r'\textbf{\textit{APC2}}',r'\textbf{\textit{APC3}}'],
 #               ["100","100","100"],
 #               [["543_A10"],["543_A10"],["543_A10"]],
@@ -124,7 +70,7 @@ ngstp.make_png(["ENST00000457016"],
 #               os.path.join(input_dir + "\\APC_cases.make_png.7.png"))
 
 
-ngstp.make_png(["ENST00000457016","ENST00000457016"],
+ngstp.make_png([apc_canon_trans,apc_canon_trans],
                [r'\textbf{\textit{APC1}}',r'\textbf{\textit{APC2}}'],
                ["010","010"],
                [["543_A10"],["543_A10"]],
@@ -138,7 +84,7 @@ ngstp.make_png(["ENST00000457016","ENST00000457016"],
                os.path.join(input_dir,"\\APC_cases.make_png.8.png"))
 
 
-ngstp.make_png(["ENST00000457016","ENST00000457016","ENST00000457016"],
+ngstp.make_png([apc_canon_trans,apc_canon_trans,apc_canon_trans],
                [r'\textbf{\textit{APC1}}',r'\textbf{\textit{APC2}}',r'\textbf{\textit{APC3}}'],
                ["001","001","001"],
                [["543_A10"],["543_A10"],["543_A10"]],
@@ -160,7 +106,7 @@ ngstp.make_png(["ENST00000457016","ENST00000457016","ENST00000457016"],
                os.path.join(input_dir , "APC_cases.make_png.9.png")
 
 
-ngstp.make_png(["ENST00000457016","ENST00000457016"],
+ngstp.make_png([apc_canon_trans,apc_canon_trans],
                [r'\textbf{\textit{APC1}}',r'\textbf{\textit{APC2}}'],
                ["010","010"],
                [["543_A10"],["543_A10"]],
@@ -178,7 +124,7 @@ ngstp.make_png(["ENST00000457016","ENST00000457016"],
                os.path.join(input_dir , "APC_cases.make_png.10.png"))
 
 
-ngstp.make_png(["ENST00000457016","ENST00000457016","ENST00000457016"],
+ngstp.make_png([apc_canon_trans,apc_canon_trans,apc_canon_trans],
                [r'\textbf{\textit{APC1}}',r'\textbf{\textit{APC2}}',r'\textbf{\textit{APC3}}'],
                ["010","010","010"],
                [["543_A10"],["543_A10"],["543_A10"]],
