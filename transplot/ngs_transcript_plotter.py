@@ -1,7 +1,7 @@
-import ngstp.utrs as u
-import ngstp.variants as v
-import ngstp.protein_domains as pds
-import ngstp.coverage as c
+import utrs as u
+import variants as v
+import protein_domains as pds
+import coverage as c
 import matplotlib.pyplot as plt
 import sys
 import pandas as pd
