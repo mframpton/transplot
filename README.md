@@ -1,4 +1,4 @@
-# ngs_transcript_plotter
+# transplot
 
 Requirements and installation
 =============================
