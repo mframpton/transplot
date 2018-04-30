@@ -1,0 +1,4 @@
+regex==2017.11.9
+pandas==0.21.0
+matplotlib==1.5.3
+numpy==1.11.3
