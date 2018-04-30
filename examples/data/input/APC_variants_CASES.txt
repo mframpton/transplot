@@ -1,0 +1,5 @@
+CHROM	pos	featureID	effect	dnachange	prot_change
+5	112175769	ENST00000457016	splice_acceptor_variant	c.4478N>T	p.Thr1493Met
+5	112175839	ENST00000457016	splice_acceptor_variant	c.XXXXN>T	p.ThrXXXXMet
+5	112176819	ENST00000457016	missense_variant	c.5528N>T	p.Pro1843Leu
+5	112179612	ENST00000457016	missense_variant	c.8321N>C	p.Ser2774Thr
