@@ -1,4 +1,4 @@
-from transplot import ngs_transcript_plotter as ngstp
+from transplot import transplotter as ngstp
 from transplot import settings as s
 import sys
 import os
