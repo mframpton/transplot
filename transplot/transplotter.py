@@ -1,6 +1,6 @@
 import utrs as u
 import variants as v
-import protein_domains as pds
+from transplot import protdomains as pds
 import coverage as c
 import matplotlib.pyplot as plt
 import sys
