@@ -1,6 +1,6 @@
 import utrs as u
 import variants as v
-from transplot import protdomains as pds
+import protdomains as pds
 import coverage as c
 import matplotlib.pyplot as plt
 import sys
