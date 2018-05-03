@@ -10,20 +10,14 @@ Functions specific to variants: reading in the variant information and creating 
 
 def get_variant_df(transcript, variant_file):
     
-    '''
-    Read the variant information from a tsv file into a DataFrame.
+    '''Read the variant information from a tsv file into a DataFrame.
     
-    Parameters
-    ----------
-    transcript: str
-        Ensembl transcript ID.
-    variant_file: str
-        path to file containing the variants.
+    Args:
+        | transcript (str): Ensembl transcript ID.
+        | variant_file (str): path to file containing the variants.
     
-    Returns
-    -------
-    DataFrame: variant_df
-        contains the variant information.
+    Returns:
+        variant_df (DataFrame): contains the variant information.
     '''
     
     variant_df = pd.DataFrame([])
@@ -39,30 +33,20 @@ def get_variant_df(transcript, variant_file):
 
 def make_track(variant_track, transcript_len, bound_l, color_l, edge_color_l, variant_df, setting_dict, variant_key):
 
-    '''
-    Make the variants track.
+    '''Make the variants track.
     
-    Parameters
-    ----------
-    variant_track: matplotlib.axes.Axes
-        axis for the variants track
-    exon_coord_df: DataFrame
-        contains the exon base pair and transcript position coordinates.
-    bound_l: list of ints
-        contains the exons and utr bounds to be used in making the color bar.
-    color_l: list of strs
-        contains the list of colors to be used in making the color bar.
-    edge_color_l: list
-        contains the list of edge colors to be used in making the color bar.
-    variant_df: DataFrame
-        contains the variants information.
-    setting_dict: dictionary
-        settings for making the png.
-    variant_key: matplotlib.axes.Axes
-        axis for the variants key.
+    Args:
+        | variant_track (matplotlib.axes.Axes): axis for the variants track
+        | exon_coord_df (DataFrame): contains the exon base pair and transcript position coordinates.
+        | bound_l (list of ints): contains the exons and utr bounds to be used in making the color bar.
+        | color_l (list of strs): contains the list of colors to be used in making the color bar.
+        | edge_color_l (list): contains the list of edge colors to be used in making the color bar.
+        | variant_df (DataFrame): contains the variants information.
+        | setting_dict (dictionary): settings for making the png.
+        | variant_key (matplotlib.axes.Axes): axis for the variants key.
     '''
 
-    '''(1) Make the color bar.'''
+    #(1) Make the color bar.
     cmap = mpl.colors.ListedColormap(color_l)
     norm = mpl.colors.BoundaryNorm(bound_l, cmap.N)
     cb = mpl.colorbar.ColorbarBase(variant_track, cmap=cmap, norm=norm, boundaries=bound_l, spacing='proportional',
@@ -71,39 +55,31 @@ def make_track(variant_track, transcript_len, bound_l, color_l, edge_color_l, va
     plt.rc('text', usetex=True)
     variant_track.set_ylabel(setting_dict["v_track_y_axis_label"], rotation='horizontal', ha='right', va='center', size=setting_dict["v_track_fontsize"])
     
-    '''(2) Annotate variant track with variants.'''
+    #(2) Annotate variant track with variants.
     annotate_track_with_variants(variant_track, variant_df, transcript_len, setting_dict)
     
-    '''(3) Make the variant annotations key.'''
+    #(3) Make the variant annotations key.
     make_variant_annotations_key(variant_key, variant_df, setting_dict)
 
 
 def annotate_track_with_variants(variant_track, variant_df, transcript_len, setting_dict):
 
-    '''
-    Annotate the variants track with arrows for the variants.
+    '''Annotate the variants track with arrows for the variants.
     
-    Parameters
-    ----------
-    variant_track: matplotlib.axes.Axes
-        axis for the variant track.
-    variant_df: DataFrame
-        contains the variant information.
-    transcript_len: int
-        transcript length.
-    setting_dict: dictionary
-        settings for making the png.
+    Args:
+        | variant_track (matplotlib.axes.Axes): axis for the variant track.
+        | variant_df (DataFrame): contains the variant information.
+        | transcript_len (int): transcript length.
+        | setting_dict (dictionary): settings for making the png.
         
-    Returns
-    -------
-    variant_track: matplotlib.axes.Axes
-        axis for the variant track.
+    Returns:
+        variant_track (matplotlib.axes.Axes): axis for the variant track.
     '''
 
     if variant_df.shape[0] == 0:
         return variant_track
     
-    '''Add columns to variant_df for annotating variants with arrows: ID, axes x coordinates, arrow bin.'''
+    #Add columns to variant_df for annotating variants with arrows: ID, axes x coordinates, arrow bin.
     variant_df["id"] = pd.Series([str(i) for i in range(1,variant_df.shape[0]+1)], index=variant_df.index)
     variant_df["top"] = variant_df.apply(lambda x: 1 if setting_dict["v_track_vars_t_or_b"][x["effect"]] == "T" else 0,
                                          axis=1) #Column for whether variant should be annotated with a top or bottom arrow.
@@ -120,7 +96,7 @@ def annotate_track_with_variants(variant_track, variant_df, transcript_len, sett
             arrow_bin += 1
         variant_df.at[i,"arrow_bin"] = arrow_bin
     
-    '''Create new dataframe where each row corresponds to 1 arrow.''' 
+    #Create new dataframe where each row corresponds to 1 arrow.
     x_pos_s = variant_df.groupby("arrow_bin")["trans_pos_pc"].mean()
     text_s = variant_df.groupby("arrow_bin").apply(lambda x: ",".join(x["id"].tolist())) #Make the annotation text string for a variant arrow.
     top_s = variant_df.groupby("arrow_bin").apply(lambda x: x["top"].tolist()[0]) #Get whether the arrow is a top or bottom arrow.   
@@ -128,10 +104,10 @@ def annotate_track_with_variants(variant_track, variant_df, transcript_len, sett
     variant_annotation_df = pd.concat([x_pos_s, text_s, top_s, heights_s],axis=1)
     variant_annotation_df.rename(columns={"trans_pos_pc":"x", 0:"text", 1:"top", 2:"height"}, inplace=True)
 
-    '''Annotate the variants.'''
+    #Annotate the variants.
     variant_annotation_df.apply(axis=1, func=annotate_track_with_arrow, variant_track=variant_track, setting_dict=setting_dict)    
 
-    '''Add text to indicate which variants types are annotated above and below the colorbar.'''
+    #Add text to indicate which variants types are annotated above and below the colorbar.
     variant_track.text(setting_dict["v_track_vars_text_top_x"], setting_dict["v_track_vars_text_top_y"], setting_dict["v_track_vars_text_top"],
                         ha='center', va='bottom', size=setting_dict["v_track_fontsize"])
     variant_track.text(setting_dict["v_track_vars_text_bot_x"], setting_dict["v_track_vars_text_bot_y"], setting_dict["v_track_vars_text_bot"],
@@ -142,18 +118,13 @@ def annotate_track_with_variants(variant_track, variant_df, transcript_len, sett
 
 def get_arrow_height_s(top_s, setting_dict):
     
-    '''
-    Get the height of the arrow.
+    '''Get the height of the arrow.
     
-    Parameters
-    ----------
-    top_s: Series
-        indicates whether a variant is annotated with an arrow above or beneath the colorbar.
+    Args:
+        top_s (Series): indicates whether a variant is annotated with an arrow above or beneath the colorbar.
     
-    Returns
-    -------
-    height_s: Series
-        indicates the height the arrow used to annotate each variant.
+    Returns:
+        height_s (Series): indicates the height the arrow used to annotate each variant.
     '''
     
     top_l = top_s.tolist()
@@ -174,17 +145,12 @@ def get_arrow_height_s(top_s, setting_dict):
     
 def annotate_track_with_arrow(arrow_bin, variant_track, setting_dict):
 
-    '''
-    Annotate the variants track with an arrow.
+    '''Annotate the variants track with an arrow.
     
-    Parameters
-    ----------
-    arrow_bin: int
-        
-    variant_track: matplotlib.axes.Axes
-        axis for the variant track.
-    setting_dict: dictionary
-        settings for making the png.
+    Args:
+        | arrow_bin (int):
+        | variant_track (matplotlib.axes.Axes): axis for the variant track.
+        | setting_dict (dictionary): settings for making the png.
     '''
 
     if arrow_bin["top"] == 1:
@@ -199,22 +165,15 @@ def annotate_track_with_arrow(arrow_bin, variant_track, setting_dict):
 
 def make_variant_annotations_key(variant_key, variant_df, setting_dict):
     
-    '''
-    Make a variant annotations key.
+    '''Make a variant annotations key.
     
-    Parameters
-    ----------
-    variant_key: matplotlib.axes.Axes
-        axis for the variant key.
-    variant_df: DataFrame
-        contains the variant information.
-    setting_dict: dictionary
-        settings for making the png.
+    Args:
+        | variant_key (matplotlib.axes.Axes): axis for the variant key.
+        | variant_df (DataFrame): contains the variant information.
+        | setting_dict (dictionary): settings for making the png.
     
-    Returns
-    -------
-    variant_key: matplotlib.axes.Axes
-        axis for the variant key.
+    Returns:
+        variant_key (matplotlib.axes.Axes): axis for the variant key.
     '''
     
     plt.rc('text',usetex=True)
@@ -253,16 +212,13 @@ def make_variant_annotations_key(variant_key, variant_df, setting_dict):
 
 def mark_up_special_chars(some_text):
     
-    '''
-    Mark up special characters for latex text.
+    '''Mark up special characters for latex text.
     
-    Parameters
-    ----------
-    some_text: str
+    Args:
+        | some_text (str):
     
-    Returns
-    -------
-    some_text: str
+    Returns:
+        some_text: str
     '''
     
     some_text = some_text.replace("_", "\_")

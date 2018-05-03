@@ -6,21 +6,15 @@ Functions for the UTRs file.
 
 def get_utr_df(utr_file, strand, transcript):
     
-    '''
-    Read the UTR information into a DataFrame.
+    '''Read the UTR information into a DataFrame.
     
-    Parameters
-    ----------
-    utr_file: str
-        path to file containing the utr information.
-    strand: str
-        whether the transcript is on the positive or negative strand.
-    transcript: str
-        Ensemble transcript ID.
+    Args:
+        | utr_file (str): path to file containing the utr information.
+        | strand (str): whether the transcript is on the positive or negative strand.
+        | transcript (str): Ensemble transcript ID.
     
-    Returns
-    -------
-    utr_df: DataFrame
+    Returns:
+        utr_df: DataFrame
     '''
     
     utr_df = pd.DataFrame([])

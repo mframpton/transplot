@@ -9,27 +9,18 @@ Functions specific to coverage: reading in the data and creating the coverage tr
 
 def get_cov_df(cov_file, transcript, bp_start, bp_end, sample_l):
 
-    '''
-    Get the coverage data for a transcript. If bp_start and bp_end are None, then coverage data for the whole transcript will
+    '''Get the coverage data for a transcript. If bp_start and bp_end are None, then coverage data for the whole transcript will
     be extracted. The coordinates in cov_df and exon_coords_df are 1-based.
     
-    Parameters
-    ----------
-    cov_file: str
-        path to file containing the coverage data.
-    transcript: str
-        Ensembl transcript ID.
-    bp_start: int
-        base pair start coordinate.
-    bp_end: int
-        base pair end coordinate.
-    sample_l: list of strs
-        list of sample IDs.
+    Args:
+        | cov_file (str): path to file containing the coverage data.
+        | transcript (str): Ensembl transcript ID.
+        | bp_start (int): base pair start coordinate.
+        | bp_end (int): base pair end coordinate.
+        | sample_l (list of strs): list of sample IDs.
     
-    Returns
-    -------
-    cov_df: DataFrame
-        contains the coverage data.
+    Returns:
+        cov_df (DataFrame): contains the coverage data.
     '''    
 
     print("Reading in coverage data for {0} samples...".format(len(sample_l)))
@@ -69,18 +60,13 @@ def get_cov_df(cov_file, transcript, bp_start, bp_end, sample_l):
 
 def get_exon_coord_df(cov_df):
 
-    '''
-    Make an exon coordinate file.
+    '''Make an exon coordinate file.
     
-    Parameters
-    ----------
-    cov_df: DataFrame
-        contains the coverage information.
+    Args:
+        cov_df (DataFrame): contains the coverage information.
         
-    Returns
-    -------
-    exon_coord_df: DataFrame
-        contains the exon base pair and transcript position coordinates.
+    Returns:
+        exon_coord_df (DataFrame): contains the exon base pair and transcript position coordinates.
     '''
 
     #Exons: the exon start and end positions in this list are 1-based. 
@@ -104,23 +90,15 @@ def get_exon_coord_df(cov_df):
 
 def make_track(track, cov_df, bound_l, color_l, edge_color_l, setting_dict):
     
-    '''
-    Make the coverage track.
+    '''Make the coverage track.
     
-    Parameters
-    ----------
-    track: matplotlib.axes.Axes
-        the axis for this coverage track.
-    cov_df: DataFrame
-        contains the coverage data.
-    bound_l: list of ints
-        bounds of the utrs and exons.
-    color_l: list of strs
-        colors for the utrs and exons.
-    edge_color_l: list of strs
-        edge colors for the utrs and exons.
-    setting_dict: dictionary
-        settings for making the png.'''
+    Args:
+        | track (matplotlib.axes.Axes): the axis for this coverage track.
+        | cov_df (DataFrame): contains the coverage data.
+        | bound_l (list of ints): bounds of the utrs and exons.
+        | color_l (list of strs): colors for the utrs and exons.
+        | edge_color_l (list of strs): edge colors for the utrs and exons.
+        | setting_dict (dictionary): settings for making the png.'''
     
     for i in range(1,len(bound_l)):
         cov_in_bounds_df =  cov_df[(cov_df["tp"] >= bound_l[i-1]) & (cov_df["tp"] < bound_l[i])]

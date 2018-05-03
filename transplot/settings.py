@@ -2,14 +2,11 @@ import pandas as pd
 
 def get_setting_dict():
 
-    '''
-    Create a dictionary of settings to use in making the png. If the user wishes to change any of these default settings,
+    '''Create a dictionary of settings to use in making the png. If the user wishes to change any of these default settings,
     then they should call this function to return the dictionary and change the values for the relevant keys.
     
-    Returns
-    -------
-    setting_dict: dict
-        settings for making the png.
+    Returns:
+        setting_dict (dict): settings for making the png.
     '''
 
     setting_dict = {}
@@ -85,10 +82,8 @@ def get_setting_dict():
 def display_setting_dict(setting_dict):
     '''Pretty print the setting_dict.
     
-    Parameters
-    ----------
-    setting_dict: dictionary
-        settings for making the png.
+    Args:
+        setting_dict (dictionary): settings for making the png.
     '''
     
     setting_dict_key_l = sorted(list(setting_dict.keys()))
