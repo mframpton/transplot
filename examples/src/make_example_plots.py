@@ -4,8 +4,10 @@ import sys
 import os
 
 #Make the input/output dir paths.
-input_dir = os.path.abspath(os.path.join(os.getcwd(),"..","data","input"))
-output_dir = os.path.abspath(os.path.join(os.getcwd(),"..","data","plots"))
+input_dir = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)),"..","data","input"))
+output_dir = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)),"..","data","plots"))
+if not os.path.exists(output_dir):
+    os.makedirs(output_dir)
 
 #Set other paths/variables.
 apc_utrs_txt = os.path.join(input_dir,"APC_utrs.txt")
