@@ -1,0 +1,2 @@
+include examples/src/*
+include examples/data/input/*
