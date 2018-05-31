@@ -14,12 +14,13 @@ Requirements and installation
 
 Run the following commands to clone and install from GitHub.
 
-```
-$ git clone https://github.com/mframpton/transplot
-$ cd transplot
-$ pip install -r requirements.txt
-$ python setup.py install
-```
+.. code-block:: bash
+   
+   $ git clone https://github.com/mframpton/transplot
+   $ cd transplot
+   $ pip install -r requirements.txt
+   $ python setup.py install
+
 
 Short tutorial
 ##############
