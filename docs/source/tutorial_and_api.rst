@@ -1,6 +1,6 @@
-******
-seqfam
-******
+*********
+transplot
+*********
 
 Requirements and installation
 #############################
