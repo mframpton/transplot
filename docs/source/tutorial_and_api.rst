@@ -8,9 +8,10 @@ Requirements and installation
 *Transplot* is compatible with Windows, Mac OS X and Linux operating systems. It requires the following packages:
 
 * regex==2017.11.9
-* pandas==0.21.0
+* pandas==0.20.3
 * matplotlib==1.5.3
-* numpy==1.11.3
+* numpy==1.13.3
+* setuptools==38.4.0
 
 Run the following commands to clone and install from GitHub.
 
