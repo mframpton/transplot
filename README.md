@@ -1,5 +1,7 @@
 # transplot
 
+Documentation is at http://transplot.readthedocs.io/en/latest/ .
+
 Requirements and installation
 =============================
 
